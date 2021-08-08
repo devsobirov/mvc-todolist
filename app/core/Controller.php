@@ -3,6 +3,23 @@
 
 abstract class Controller
 {
+    public function __construct()
+    {
+        $this->middleware();
+    }
+
+    public function middleware($middleware = 'web')
+    {
+        $middleware = ucwords($middleware) . "Middleware";
+        if (file_exists(APP_ROOT . '/http/middlewares/' . $middleware . '.php'))
+        {
+            require_once APP_ROOT . '/http/middlewares/' . $middleware . '.php';
+            $middleware = new $middleware;
+        }
+
+        return $middleware;
+    }
+
     /**
      * Инициализирует нужный модель
      * @param string $model
@@ -10,6 +27,7 @@ abstract class Controller
      */
     public function getModel($model)
     {
+        $model = ucwords($model);
         return new $model;
     }
     /**

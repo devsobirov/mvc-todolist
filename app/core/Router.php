@@ -30,7 +30,7 @@ class Router
     {
         //Определем нужный контроллер
         $requiredController = ucwords($this->url[0]). "Controller";
-        if (file_exists( APP_ROOT."/controllers/" .$requiredController .".php" ) )
+        if (file_exists( APP_ROOT."/http/controllers/" .$requiredController .".php" ) )
         {
             $this->currentController = $requiredController;
             unset($this->url[0]);

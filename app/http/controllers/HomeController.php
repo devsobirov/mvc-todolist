@@ -3,9 +3,10 @@
 
 class HomeController extends Controller
 {
+
     public function __construct()
     {
-        //echo __CLASS__;
+        //
     }
 
     public function index()
@@ -15,6 +16,7 @@ class HomeController extends Controller
 
     public function create()
     {
+        $this->middleware('auth');
         $this->view('create');
     }
 }

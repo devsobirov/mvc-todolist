@@ -7,7 +7,7 @@ define('APP_KEY', 'lifeWithoutPurposeIsAPrison');
 define('APP_ROOT', dirname(dirname(__FILE__)));
 
 // Корневой УРЛ приложения
-define('URL_ROOT', 'http://mvc_todolist/');
+define('URL_ROOT', 'http://mvc-todolist/');
 
 
 define('DB_NAME', 'mvc_todo');
