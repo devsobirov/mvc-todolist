@@ -1,11 +1,11 @@
 <?php
 
 
-class AuthController
+class AuthController extends Controller
 {
     public function login()
     {
-        echo __METHOD__;
+       $this->view('login');
     }
 
     public function logout()

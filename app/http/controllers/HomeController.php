@@ -13,10 +13,4 @@ class HomeController extends Controller
     {
         $this->view('home');
     }
-
-    public function create()
-    {
-        $this->middleware('auth');
-        $this->view('create');
-    }
 }
