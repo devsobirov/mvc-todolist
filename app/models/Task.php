@@ -36,6 +36,19 @@ class Task extends Model
         return  false;
     }
 
+    public function update($id,  $content)
+    {
+        $this->db->query("UPDATE {$this->table} SET content = :content WHERE id = :id");
+        $this->db->bind(':content', $content);
+        $this->db->bind(':id', $id);
+
+        $result = $this->db->execute();
+        if ($result) {
+            $result = $this->setUpdatedAt($id);
+        }
+
+        return $result;
+    }
     public function getTotalRows ()
     {
         $this->db->query("SELECT COUNT(*) as total FROM {$this->table}");
@@ -43,5 +56,31 @@ class Task extends Model
         $result = $this->db->single();
 
         return $result->total;
+    }
+
+    public function setStatus($id)
+    {
+        $result = null;
+        $this->db->query("UPDATE {$this->table} SET status = :status WHERE id = :id");
+
+        $this->db->bind(':status', 1);
+        $this->db->bind(':id', $id);
+
+        $result = $this->db->execute();
+        if ($result) {
+            $result = $this->setUpdatedAt($id);
+        }
+        return $result;
+    }
+
+    public function setUpdatedAt($id)
+    {
+        $this->db->query("UPDATE {$this->table} SET updated_at = :updated WHERE id = :id");
+
+        $this->db->bind(':updated', date('Y-m-d h:i:s'));
+        $this->db->bind(':id', $id);
+
+        $result = $this->db->execute();
+        return $result;
     }
 }

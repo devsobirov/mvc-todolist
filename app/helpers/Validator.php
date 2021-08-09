@@ -108,7 +108,8 @@ class Validator
      */
     public function purify($string)
     {
-        $this->validatedValue = htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+        //$this->validatedValue = htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
+        $this->validatedValue = strip_tags($string);
         return $this;
     }
 

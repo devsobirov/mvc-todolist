@@ -18,14 +18,8 @@
                 <a href="/" class="btn btn-outline-dark">
                     Замечательный To-Do List
                 </a>
-                <a href="#" class="btn btn-outline-secondary mx-2">
-                    <i class="fa fa-sign-in"></i>
-                    Войти в аккаунт
-                </a>
-                <a href="#" class="btn btn-outline-danger mx-2 d-none">
-                    <i class="fa fa-sign-in"></i>
-                    Выйти из профилья
-                </a>
+
+                <?php include_once __DIR__ . "/includes/authActions.php"?>
             </div>
         </div>
     </nav>
@@ -78,19 +72,29 @@
                         <tr>
                             <td><?php echo $task->username ?></td>
                             <td><?php echo $task->user_email ?></td>
-                            <td><?php echo $task->content ?></td>
+                            <td>
+                                <?php echo "<span id='c-{$task->id}'> $task->content </span>"; ?>
+                                <?php  if (SessionHelper::isLoggedIn()) : ?>
+                                   <button class="btn btn-outline-warning btn-sm editBtn" data-bs-toggle="modal" data-bs-target="#edit"
+                                           data-id="<?php echo $task->id?>">
+                                        <i class="fa fa-edit"></i> Редактировать
+                                    </button>
+                                <?php endif; ?>
+
+                            </td>
                             <td>
                                 <div class="form-check form-switch">
                                     <?php if (!$task->status): ?>
-                                        <label class="form-check-label" for="status">
+                                        <label class="form-check-label" for="status" data-id="<?php echo $task->id?>" id="l-<?php echo $task->id?>">
                                             Не выполнено <i class="fa fa-remove text-danger"></i>
+                                            <?php if (SessionHelper::isLoggedIn()) : ?>
+                                                <input class="form-check-input" type="checkbox" id="status">
+                                            <?php endif; ?>
                                         </label>
-                                        <input class="form-check-input" type="checkbox" id="status">
                                     <?php else :?>
                                         <label class="form-check-label" for="status">
-                                            выполнено <i class="fa fa-check-square-o text-success"></i>
+                                            Выполнено <i class="fa fa-check-square-o text-success"></i>
                                         </label>
-                                        <input class="form-check-input" type="checkbox" id="status" checked>
                                     <?php endif; ?>
 
                                 </div>
@@ -102,35 +106,6 @@
                             </td>
                         </tr>
                     <?endforeach; ?>
-<!--                    <tr>-->
-<!--                        <td>Юрий Газманов</td>-->
-<!--                        <td>Газманов.мейл.ком</td>-->
-<!--                        <td>Задача номер 1</td>-->
-<!--                        <td>-->
-<!--                            <div class="form-check form-switch">-->
-<!--                                <label class="form-check-label" for="status">-->
-<!--                                    Не выполнено <i class="fa fa-remove text-danger"></i>-->
-<!--                                </label>-->
-<!--                                <input class="form-check-input" type="checkbox" id="status">-->
-<!--                            </div>-->
-<!--                        </td>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <td>Fillip Kirkorov</td>-->
-<!--                        <td>Kirkorov@mail.com</td>-->
-<!--                        <td>Задача номер 2</td>-->
-<!--                        <td>-->
-<!--                            <div class="form-check form-switch">-->
-<!--                                <label class="form-check-label" for="status">-->
-<!--                                    выполнено <i class="fa fa-check-square-o text-success"></i>-->
-<!--                                </label>-->
-<!--                                <input class="form-check-input" type="checkbox" id="status" checked>-->
-<!--                            </div>-->
-<!--                            <div class="text-muted text-italic edited">-->
-<!--                                Редактировано администратором <i class="fa fa-pencil"></i>-->
-<!--                            </div>-->
-<!--                        </td>-->
-<!--                    </tr>-->
 <!--                    <tr>-->
 <!--                        <td>Fillip Kirkorov</td>-->
 <!--                        <td>Kirkorov@mail.com</td>-->
@@ -166,21 +141,6 @@
                     <?php
                     echo $data['pagination']->get();
                     ?>
-<!--                    <ul class="pagination">-->
-<!--                        <li class="page-item">-->
-<!--                            <a class="page-link" href="#" aria-label="Previous">-->
-<!--                                <span aria-hidden="true">&laquo;</span>-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                        <li class="page-item"><a class="page-link" href="#">1</a></li>-->
-<!--                        <li class="page-item"><a class="page-link" href="#">2</a></li>-->
-<!--                        <li class="page-item"><a class="page-link" href="#">3</a></li>-->
-<!--                        <li class="page-item">-->
-<!--                            <a class="page-link" href="#" aria-label="Next">-->
-<!--                                <span aria-hidden="true">&raquo;</span>-->
-<!--                            </a>-->
-<!--                        </li>-->
-<!--                    </ul>-->
                 </nav>
             </div>
         </div>
@@ -221,9 +181,9 @@
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" id="edit">
+    <div class="modal fade" tabindex="-1" id="edit">
         <div class="modal-dialog">
-            <form class="modal-content g-3 was-validated" method="POST">
+            <form class="modal-content g-3 was-validated" method="POST" action="" id="edit-form">
                 <div class="modal-header">
                     <h5 class="modal-title">Редактировать задачу</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -231,16 +191,67 @@
                 <div class="modal-body row">
                     <div class="col-md-12">
                         <label for="edit-task" class="form-label">Задание <sup>*</sup></label>
-                        <input type="text" class="form-control" id="edit-task" name="task" required>
+                        <input type="text" class="form-control" id="edit-task" name="content" required>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
-                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <button class="btn btn-primary" type="submit">Сохранить</button>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        const labelEls = document.querySelectorAll('.form-check-label');
+        const fetchUrl = "<?php echo URL_ROOT?>"+"/task/setStatus/";
+
+        const handleLabelEl = (id) => {
+            let el = document.getElementById('l-'+id);
+            el.innerHTML = `
+                <label class="form-check-label" for="status">
+                                            Выполнено <i class="fa fa-check-square-o text-success"></i>
+                                        </label>
+            `;
+        }
+        const setStatus = (e) => {
+            let id = e.currentTarget.getAttribute('data-id');
+            fetch(fetchUrl + id)
+                .then(response => { return response.json()})
+                .then(data => { handleLabelEl(id) } )
+                .catch(e => console.log(e));
+        }
+        if (labelEls.length > 0) {
+            labelEls.forEach(el => {
+                el.addEventListener('click', setStatus);
+            });
+        }
+
+
+        const editEl = document.querySelectorAll('.editBtn');
+        const formEl = document.getElementById('edit-form');
+        const inputEl = document.getElementById('edit-task');
+        const editUrl = "<?php echo URL_ROOT?>task/update/"
+
+        const clear = () => {
+            formEl.setAttribute('action', '');
+            inputEl.value = '';
+        }
+        const handleEditForm = (e) => {
+            clear();
+            let id = e.currentTarget.getAttribute('data-id');
+            const spanEl = document.getElementById('c-'+id);
+
+            console.log(id, spanEl);
+            formEl.setAttribute('action', editUrl+id);
+            inputEl.value =  spanEl.textContent;
+        }
+
+        if (editEl.length > 0 ) {
+            editEl.forEach(btn => {
+                btn.addEventListener('click', handleEditForm);
+            })
+        }
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="/js/main.js"></script>
 </body>

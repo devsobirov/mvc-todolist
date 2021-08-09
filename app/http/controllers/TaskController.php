@@ -33,16 +33,43 @@ class TaskController extends Controller
         header('Location: /');
     }
 
-    public function update()
+    public function update($id)
     {
-        $this->middleware('auth');
+        if ( !SessionHelper::isLoggedIn()) {
+            SessionHelper::flushErrorMessages(["Нужно авторизоваться для этого действия"]);
+            header('Location:' . URL_ROOT . "auth/login");
+            return;
+        }
+        $id = intval($id);
+        $errors = [];
+        $result = null;
+
+        if ($_POST) {
+            $validator = new Validator();
+            $content = $validator->name('Текст Задачи')->value($_POST['content'])
+                ->required()->min(2)->max(500)->purify($_POST['content'])
+                ->result($errors);
+        }
+
+        if (empty($errors)) {
+            $result = $this->taskModel->update($id, $_POST['content']);
+        }
+
+        if ( $result ) {
+            SessionHelper::flushSuccessMessages(["Успешно редактировано!"]);
+        } else {
+            SessionHelper::flushErrorMessages(["Произошла неопознанная ошибка"]);
+        }
+
+        header('Location: /');
     }
 
-    public function setStatus()
+    public function setStatus($id)
     {
-        $result = rand(0,1) ? true : false;
+        $id = intval($id);
+        $result = $this->taskModel->setStatus($id);
 
-        return $result;
+        echo $result ? $id : $result;
     }
 
     protected function validate($errors)

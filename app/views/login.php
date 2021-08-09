@@ -18,45 +18,25 @@
                 <a href="/" class="btn btn-outline-primary">
                     Awesome To-Do List
                 </a>
-                <a href="#" class="btn btn-outline-secondary mx-2">
-                    <i class="fa fa-sign-in"></i>
-                    Войти в аккаунт
-                </a>
-                <a href="#" class="btn btn-outline-danger mx-2 d-none">
-                    <i class="fa fa-sign-in"></i>
-                    Выйти из профилья
-                </a>
+                <?php include_once __DIR__ . "/includes/authActions.php"?>
             </div>
         </div>
     </nav>
 
-    <section class="messages">
-        <div class="container">
-            <div class="d-flex flex-column w-80 mx-auto">
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    A simple success alert—check it out!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    A simple danger alert—check it out!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-    </section>
+    <?php include_once  __DIR__. "/includes/messages.php"?>
 
     <div class="position-absolute top-50 start-50 translate-middle">
-            <form class="g-3 was-validated row w-50 mx-auto border shadow bg-white p-3" method="POST">
+            <form class="g-3 was-validated row w-50 mx-auto border shadow bg-white p-3" method="POST" action="<? echo URL_ROOT?>auth/check">
                 <div class="col-md-12">
                     <label for="username" class="form-label">Имя пользователья <sup>*</sup></label>
-                    <input type="text" class="form-control" id="username" required>
+                    <input type="text" class="form-control" id="username" name="username" required>
                 </div>
                 <div class="col-md-12">
                     <label for="user-email" class="form-label">Пароль <sup>*</sup></label>
-                    <input type="email" class="form-control" id="user-email" required>
+                    <input type="password" class="form-control" id="user-email" name="password" required>
                 </div>
                 <div class="col-md-12">
-                    <button class="btn btn-primary" type="submit">Войти</button>
+                    <button class="btn btn-primary" type="submit" name="login">Войти</button>
                 </div>
             </form>
         </div>
