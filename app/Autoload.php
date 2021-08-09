@@ -6,7 +6,9 @@ function my_autoload($class_name)
 {
     // Массив папок, в которых могут находиться необходимые классы
     $array_paths = array(
+        '/',
         '/core/',
+        '/helpers/',
         '/http/controllers/',
         '/models/',
     );

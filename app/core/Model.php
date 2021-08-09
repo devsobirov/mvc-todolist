@@ -5,7 +5,7 @@ abstract class Model
 {
     protected $db;
     protected $table;
-    protected $perPage;
+    public $perPage;
 
     public function __construct()
     {

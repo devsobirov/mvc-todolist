@@ -8,6 +8,11 @@ class AuthController extends Controller
        $this->view('login');
     }
 
+    public function check()
+    {
+        header('Location: /');
+    }
+
     public function logout()
     {
         echo __METHOD__;

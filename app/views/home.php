@@ -30,37 +30,26 @@
         </div>
     </nav>
 
-    <section class="messages">
-        <div class="container">
-            <div class="d-flex flex-column w-80 mx-auto">
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    A simple success alert—check it out!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    A simple danger alert—check it out!
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-    </section>
+    <?php include_once __DIR__ . '/includes/messages.php'; ?>
 
     <section class="options">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center w-80 mx-auto p-2 border shadow-sm rounded bg-green">
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create">Create new</button>
-                <form action="#" method="get" class="d-flex align-items-center">
-                    <select name="order-by" id="order-by" class="" required>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create">
+                    <i class="fa fa-plus-circle"></i> Добавить новую
+                </button>
+                <form action="/" method="get" class="d-flex align-items-center">
+                    <select name="column" id="order-by" class="" required>
                         <option value="" selected disabled>Сортировать список по:</option>
-                        <option value="">Имя пользователя</option>
-                        <option value="">Email</option>
-                        <option value="">Статус</option>
+                        <option value="username">Имя пользователя</option>
+                        <option value="user_email">Email</option>
+                        <option value="status">Статус</option>
                     </select>
                     <select name="order-line" id="order-line" class="" required>
-                        <option value="asc"><i class="fa fa-sort-amount-asc"></i> По возрастанию</option>
-                        <option value="desc"><i class="fa fa-sort-amount-desc"></i> По убиванию</option>
+                        <option value="ASC"> По возрастанию</option>
+                        <option value="DESC">По убиванию</option>
                     </select>
-                    <button class="btn btn-outline-primary py-1 px-3">
+                    <button class="btn btn-outline-primary py-1 px-3" type="submit">
                         <i class="fa fa-filter"></i>
                         Filter
                     </button>
@@ -80,88 +69,126 @@
                     </tr>
                 </thead>
                 <tbody>
+                <?php if ( empty($data['tasks'])) : ?>
                     <tr>
-                        <td>Юрий Газманов</td>
-                        <td>Газманов.мейл.ком</td>
-                        <td>Задача номер 1</td>
-                        <td>
-                            <div class="form-check form-switch">
-                                <label class="form-check-label" for="status">
-                                    Не выполнено <i class="fa fa-remove text-danger"></i>
-                                </label>
-                                <input class="form-check-input" type="checkbox" id="status">
-                            </div>
-                        </td>
+                        <td colspan='4' class='text-center text-white text-bold bg-danger'> Список заданий пуст, добавьте первую задачу.</td>
                     </tr>
-                    <tr>
-                        <td>Fillip Kirkorov</td>
-                        <td>Kirkorov@mail.com</td>
-                        <td>Задача номер 2</td>
-                        <td>
-                            <div class="form-check form-switch">
-                                <label class="form-check-label" for="status">
-                                    выполнено <i class="fa fa-check-square-o text-success"></i>
-                                </label>
-                                <input class="form-check-input" type="checkbox" id="status" checked>
-                            </div>
-                            <div class="text-muted text-italic edited">
-                                Редактировано администратором <i class="fa fa-pencil"></i>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Fillip Kirkorov</td>
-                        <td>Kirkorov@mail.com</td>
-                        <td>
-                            <span class="task">Задача номер 2</span>
-                            <button class="btn btn-outline-warning btn-sm">
-                                <i class="fa fa-edit"></i> Редактировать
-                            </button>
-                        </td>
-                        <td>
-                            <div class="form-check form-switch">
-                                <label class="form-check-label" for="status">
-                                    выполнено <i class="fa fa-check-square-o text-success"></i>
-                                </label>
-                                <input class="form-check-input" type="checkbox" id="status" checked>
-                            </div>
-                            <div class="text-muted text-italic edited">
-                                Редактировано администратором <i class="fa fa-pencil"></i>
-                            </div>
-                        </td>
-                    </tr>
+                <?php else : ?>
+                    <?php  foreach ($data['tasks'] as $task) : ?>
+                        <tr>
+                            <td><?php echo $task->username ?></td>
+                            <td><?php echo $task->user_email ?></td>
+                            <td><?php echo $task->content ?></td>
+                            <td>
+                                <div class="form-check form-switch">
+                                    <?php if (!$task->status): ?>
+                                        <label class="form-check-label" for="status">
+                                            Не выполнено <i class="fa fa-remove text-danger"></i>
+                                        </label>
+                                        <input class="form-check-input" type="checkbox" id="status">
+                                    <?php else :?>
+                                        <label class="form-check-label" for="status">
+                                            выполнено <i class="fa fa-check-square-o text-success"></i>
+                                        </label>
+                                        <input class="form-check-input" type="checkbox" id="status" checked>
+                                    <?php endif; ?>
+
+                                </div>
+                                <?php if ($task->updated_at): ?>
+                                    <div class="text-muted text-italic edited">
+                                        Редактировано администратором <i class="fa fa-pencil"></i>
+                                    </div>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?endforeach; ?>
+<!--                    <tr>-->
+<!--                        <td>Юрий Газманов</td>-->
+<!--                        <td>Газманов.мейл.ком</td>-->
+<!--                        <td>Задача номер 1</td>-->
+<!--                        <td>-->
+<!--                            <div class="form-check form-switch">-->
+<!--                                <label class="form-check-label" for="status">-->
+<!--                                    Не выполнено <i class="fa fa-remove text-danger"></i>-->
+<!--                                </label>-->
+<!--                                <input class="form-check-input" type="checkbox" id="status">-->
+<!--                            </div>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td>Fillip Kirkorov</td>-->
+<!--                        <td>Kirkorov@mail.com</td>-->
+<!--                        <td>Задача номер 2</td>-->
+<!--                        <td>-->
+<!--                            <div class="form-check form-switch">-->
+<!--                                <label class="form-check-label" for="status">-->
+<!--                                    выполнено <i class="fa fa-check-square-o text-success"></i>-->
+<!--                                </label>-->
+<!--                                <input class="form-check-input" type="checkbox" id="status" checked>-->
+<!--                            </div>-->
+<!--                            <div class="text-muted text-italic edited">-->
+<!--                                Редактировано администратором <i class="fa fa-pencil"></i>-->
+<!--                            </div>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                        <td>Fillip Kirkorov</td>-->
+<!--                        <td>Kirkorov@mail.com</td>-->
+<!--                        <td>-->
+<!--                            <span class="task">Задача номер 2</span>-->
+<!--                            <button class="btn btn-outline-warning btn-sm">-->
+<!--                                <i class="fa fa-edit"></i> Редактировать-->
+<!--                            </button>-->
+<!--                        </td>-->
+<!--                        <td>-->
+<!--                            <div class="form-check form-switch">-->
+<!--                                <label class="form-check-label" for="status">-->
+<!--                                    выполнено <i class="fa fa-check-square-o text-success"></i>-->
+<!--                                </label>-->
+<!--                                <input class="form-check-input" type="checkbox" id="status" checked>-->
+<!--                            </div>-->
+<!--                            <div class="text-muted text-italic edited">-->
+<!--                                Редактировано администратором <i class="fa fa-pencil"></i>-->
+<!--                            </div>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+                <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </section>
 
+    <?php if (isset($data['pagination']) && $data['pagination']->amount > 1) : ?>
     <section class="pagination">
         <div class="container">
             <div class="d-flex justify-content-center w-80 mx-auto">
                 <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
+                    <?php
+                    echo $data['pagination']->get();
+                    ?>
+<!--                    <ul class="pagination">-->
+<!--                        <li class="page-item">-->
+<!--                            <a class="page-link" href="#" aria-label="Previous">-->
+<!--                                <span aria-hidden="true">&laquo;</span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                        <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+<!--                        <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+<!--                        <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+<!--                        <li class="page-item">-->
+<!--                            <a class="page-link" href="#" aria-label="Next">-->
+<!--                                <span aria-hidden="true">&raquo;</span>-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
                 </nav>
             </div>
         </div>
     </section>
-
+    <?php endif; ?>
     <div class="modal fade" tabindex="-1" id="create">
         <div class="modal-dialog">
-            <form class="modal-content g-3 was-validated" method="POST">
+            <form class="modal-content g-3 was-validated" method="POST" action="<?= URL_ROOT?>task/create">
                 <div class="modal-header">
                     <h5 class="modal-title">Добавить задачу</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -169,29 +196,26 @@
                 <div class="modal-body row g-3 needs-validation">
                     <div class="col-md-6">
                         <label for="username" class="form-label">Имя пользователья <sup>*</sup></label>
-                        <input type="text" class="form-control" id="username" required>
+                        <input type="text" class="form-control" id="username" name="username" required>
                         <div class="valid-feedback">
-                            Looks good!
+                            Отлично!
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label for="user-email" class="form-label">Э-почта <sup>*</sup></label>
-                        <input type="email" class="form-control" id="user-email" required>
+                        <input type="email" class="form-control" id="user_email" name="user_email" required>
                         <div class="valid-feedback">
-                            Looks good!
-                        </div>
-                        <div class="valid-feedback">
-                            Looks good!
+                            Отлично!
                         </div>
                     </div>
                     <div class="col-md-12">
                         <label for="task" class="form-label">Задание <sup>*</sup></label>
-                        <input type="text" class="form-control" id="task" required>
+                        <input type="text" class="form-control" id="task" name="content" required>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
-                    <button class="btn btn-primary" type="submit">Сохранить</button>
+                    <input class="btn btn-primary" type="submit" value="Сохранить" name="create_task">
                 </div>
             </form>
         </div>

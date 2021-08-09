@@ -67,3 +67,25 @@ section.pagination {
     text-decoration: underline;
     text-decoration-color: #426792 ;
 }
+
+ul.pagination li {
+    cursor: pointer;
+    margin: 8px 4px;
+    padding: 8px 14px;
+    border: 1px solid #426792;
+    color: #426792;
+}
+
+ul.pagination li a {
+    color: #426792;
+    text-decoration: none;
+}
+
+ul.pagination .active {
+    background: #426792;
+}
+
+ul.pagination .active > a {
+    color: white;
+    font-weight: bold;
+}
