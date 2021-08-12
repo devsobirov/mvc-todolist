@@ -11,20 +11,16 @@ class User extends Model
      * @return bool|User|Model
      */
     public function login($username, $password) {
-        $this->db->query('SELECT * FROM users WHERE username = :username');
+
+        $receivedPasswordHash = md5(APP_KEY. $password) ;
+        $this->db->query('SELECT * FROM users WHERE username = :username AND password = :password');
 
         //Bind value
         $this->db->bind(':username', $username);
+        $this->db->bind(':password', $receivedPasswordHash);
 
-        $row = $this->db->single();
+        $user = $this->db->single();
 
-        $hashedPassword = $row->password;
-
-        $recievedPasswordHash = md5(APP_KEY. $password) ;
-        if ($recievedPasswordHash === $hashedPassword) {
-            return $row;
-        }
-
-        return false;
+        return $user;
     }
 }
