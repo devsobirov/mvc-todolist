@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title><?php APP_NAME ?></title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -106,27 +106,6 @@
                             </td>
                         </tr>
                     <?endforeach; ?>
-<!--                    <tr>-->
-<!--                        <td>Fillip Kirkorov</td>-->
-<!--                        <td>Kirkorov@mail.com</td>-->
-<!--                        <td>-->
-<!--                            <span class="task">Задача номер 2</span>-->
-<!--                            <button class="btn btn-outline-warning btn-sm">-->
-<!--                                <i class="fa fa-edit"></i> Редактировать-->
-<!--                            </button>-->
-<!--                        </td>-->
-<!--                        <td>-->
-<!--                            <div class="form-check form-switch">-->
-<!--                                <label class="form-check-label" for="status">-->
-<!--                                    выполнено <i class="fa fa-check-square-o text-success"></i>-->
-<!--                                </label>-->
-<!--                                <input class="form-check-input" type="checkbox" id="status" checked>-->
-<!--                            </div>-->
-<!--                            <div class="text-muted text-italic edited">-->
-<!--                                Редактировано администратором <i class="fa fa-pencil"></i>-->
-<!--                            </div>-->
-<!--                        </td>-->
-<!--                    </tr>-->
                 <?php endif; ?>
                 </tbody>
             </table>
@@ -202,55 +181,10 @@
         </div>
     </div>
     <script>
-        const labelEls = document.querySelectorAll('.form-check-label');
+        // УРЛ для изменения статуса задания
         const fetchUrl = "<?php echo URL_ROOT?>"+"/task/setStatus/";
-
-        const handleLabelEl = (id) => {
-            let el = document.getElementById('l-'+id);
-            el.innerHTML = `
-                <label class="form-check-label" for="status">
-                                            Выполнено <i class="fa fa-check-square-o text-success"></i>
-                                        </label>
-            `;
-        }
-        const setStatus = (e) => {
-            let id = e.currentTarget.getAttribute('data-id');
-            fetch(fetchUrl + id)
-                .then(response => { return response.json()})
-                .then(data => { handleLabelEl(id) } )
-                .catch(e => console.log(e));
-        }
-        if (labelEls.length > 0) {
-            labelEls.forEach(el => {
-                el.addEventListener('click', setStatus);
-            });
-        }
-
-
-        const editEl = document.querySelectorAll('.editBtn');
-        const formEl = document.getElementById('edit-form');
-        const inputEl = document.getElementById('edit-task');
-        const editUrl = "<?php echo URL_ROOT?>task/update/"
-
-        const clear = () => {
-            formEl.setAttribute('action', '');
-            inputEl.value = '';
-        }
-        const handleEditForm = (e) => {
-            clear();
-            let id = e.currentTarget.getAttribute('data-id');
-            const spanEl = document.getElementById('c-'+id);
-
-            console.log(id, spanEl);
-            formEl.setAttribute('action', editUrl+id);
-            inputEl.value =  spanEl.textContent;
-        }
-
-        if (editEl.length > 0 ) {
-            editEl.forEach(btn => {
-                btn.addEventListener('click', handleEditForm);
-            })
-        }
+        // УРЛ для экшна формы для обновленя задания
+        const editUrl = "<?php echo URL_ROOT?>task/update/";
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="/js/main.js"></script>

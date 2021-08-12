@@ -1,8 +1,14 @@
 <?php
 
-
+/**
+ * Содержит методов авторизации
+ * Class AuthController
+ */
 class AuthController extends Controller
 {
+    /**
+     * @var User|Model
+     */
     protected $userModel;
 
     public function __construct()
@@ -10,12 +16,18 @@ class AuthController extends Controller
         $this->userModel = $this->getModel('user');
     }
 
+    /**
+     * Возвращает страницу авторизации
+     */
     public function login()
     {
         SessionHelper::isLoggedIn() ? header('Location: /') : true;
        $this->view('login');
     }
 
+    /**
+     * Содержит логику авторизации
+     */
     public function check()
     {
         $errors = [];
@@ -26,10 +38,17 @@ class AuthController extends Controller
             $data = $this->validate($errors);
         }
 
-        if (empty($errors) && !empty($data))
+        if (empty($errors))
         {
+
+            $data['username'] = trim($_POST['username']);
+            $data['password'] = trim($_POST['password']);
+
             $user = $this->userModel->login($data['username'], $data['password']);
-            //var_dump($user);die();
+        } else {
+            SessionHelper::flushErrorMessages($errors);
+            header('Location:' . URL_ROOT .'auth/login');
+            return;
         }
 
         if ($user)
@@ -43,6 +62,9 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * Удаляет пользователья из сессии
+     */
     public function logout()
     {
         unset($_SESSION['user_id']);
@@ -51,21 +73,15 @@ class AuthController extends Controller
 
     protected function validate($errors)
     {
-        $data = [];
         $validator = new Validator();
 
-        $username = $validator->name('Имя пользователья')->value(trim($_POST['username']))
+        $errors = $validator->name('Имя пользователья')->value(trim($_POST['username']))
             ->required()->min(2)->max(255)->purify($_POST['username'])
             ->result($errors);
-        $password = $validator->name('Пароль')->value(trim($_POST['password']))
+        $errors = $validator->name('Пароль')->value(trim($_POST['password']))
             ->required()->min(2)->max(255)->purify($_POST['username'])
             ->result($errors);
 
-        if (empty($errors)) {
-            $data['username'] = trim($_POST['username']);
-            $data['password'] = trim($_POST['password']);
-        }
-
-        return $data;
+        return $errors;
     }
 }

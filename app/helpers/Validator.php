@@ -88,10 +88,10 @@ class Validator
     /**
      * Проверка э-почту на валидность
      * @param $value
-     * @return bool
      */
-    public function is_email($value)
+    public function is_email()
     {
+        $value = $this->value;
         $this->validatedValue = $value;
         if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
             $this->errors[] = 'Введите валидную э-почту';
@@ -146,10 +146,8 @@ class Validator
             foreach ($this->getErrors() as $error) {
                 $messages[] = $error;
             }
-            exit;
 
-        } else {
-            return $this->validatedValue;
         }
+        return $messages;
     }
 }

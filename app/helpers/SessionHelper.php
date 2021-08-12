@@ -1,9 +1,18 @@
 <?php
 
-
+/**
+ * Содержит методов работы с сессией, реализует
+ *      "одноразовых" (flush) сообщений
+ *
+ * Class SessionHelper
+ */
 class SessionHelper
 {
-    public static function isLoggedIn ()
+    /**
+     * Проверяет авторизован ли пользователь
+     * @return bool
+     */
+    public static function isLoggedIn () : bool
     {
         if (isset($_SESSION['user_id']) && is_numeric($_SESSION['user_id']) ) {
             return true;
@@ -12,6 +21,11 @@ class SessionHelper
         return false;
     }
 
+    /**
+     * Устанавливает сообщений об ошибках
+     * @param $messages
+     * @return bool
+     */
     public static function flushErrorMessages($messages) : bool
     {
         if (isset($messages)) {
@@ -24,6 +38,11 @@ class SessionHelper
         return true;
     }
 
+    /**
+     * Устанавливает сообщений об успехе
+     * @param $messages
+     * @return bool
+     */
     public static function flushSuccessMessages($messages) : bool
     {
         if (isset($messages)) {
@@ -36,6 +55,10 @@ class SessionHelper
         return true;
     }
 
+    /**
+     * Проверяте на наличие новых сообщений
+     * @return bool
+     */
     public static function hasAnyMessage () : bool
     {
         if (isset($_SESSION['errors']) || isset($_SESSION['success']))
@@ -45,11 +68,19 @@ class SessionHelper
         return false;
     }
 
+    /**
+     * Получает сообщений из сессий по типу
+     * @param string $type
+     * @return array
+     */
     public static function getFlushMessage($type) : array
     {
         return $_SESSION[$type];
     }
 
+    /**
+     * Удаляет сообщений из завершенной сессии
+     */
     public static function clearFlushMessages()
     {
         if (isset($_SESSION['errors']) && $_SESSION['shouldClearMessages']) {

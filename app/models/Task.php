@@ -6,6 +6,13 @@ class Task extends Model
     protected $table = 'tasks';
     public $perPage = 3;
 
+    /**
+     * Получает пагинированный список для главной страницы
+     * @param $column
+     * @param $inOrder
+     * @param int $currentPage
+     * @return mixed
+     */
     public function getPaginatedTasks($column, $inOrder, $currentPage = 1 )
     {
         $offset = ($currentPage - 1) * $this->perPage;
@@ -22,6 +29,11 @@ class Task extends Model
         return $tasks;
     }
 
+    /**
+     * Создает новых заданий в БД
+     * @param $data
+     * @return bool
+     */
     public function createTask($data)
     {
         $this->db->query("INSERT INTO {$this->table} (username, user_email, content) VALUES (:username, :user_email, :content)");
@@ -36,6 +48,12 @@ class Task extends Model
         return  false;
     }
 
+    /**
+     * Обновляет контест задания и изменяет статус задания на "Редактировано"
+     * @param $id
+     * @param $content
+     * @return mixed
+     */
     public function update($id,  $content)
     {
         $this->db->query("UPDATE {$this->table} SET content = :content WHERE id = :id");
@@ -49,6 +67,11 @@ class Task extends Model
 
         return $result;
     }
+
+    /**
+     * Возвращает количество записей в БД
+     * @return mixed|int
+     */
     public function getTotalRows ()
     {
         $this->db->query("SELECT COUNT(*) as total FROM {$this->table}");
@@ -58,6 +81,11 @@ class Task extends Model
         return $result->total;
     }
 
+    /**
+     * Изменяет статус на задания "Редактировано"
+     * @param $id
+     * @return mixed
+     */
     public function setStatus($id)
     {
         $result = null;
@@ -73,6 +101,11 @@ class Task extends Model
         return $result;
     }
 
+    /**
+     * Выполняет логику для изменения статуса задания
+     * @param $id
+     * @return mixed
+     */
     public function setUpdatedAt($id)
     {
         $this->db->query("UPDATE {$this->table} SET updated_at = :updated WHERE id = :id");

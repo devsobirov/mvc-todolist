@@ -5,6 +5,11 @@ class User extends Model
 {
     protected $table = 'users';
 
+    /**
+     * @param $username
+     * @param $password
+     * @return bool|User|Model
+     */
     public function login($username, $password) {
         $this->db->query('SELECT * FROM users WHERE username = :username');
 

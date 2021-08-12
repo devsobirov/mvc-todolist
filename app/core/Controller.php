@@ -1,6 +1,10 @@
 <?php
 
-
+/**
+ * Абстрактный класс контроллеров, устанавливает мидлвар,
+ *  получает нужный модель и шаблон
+ * Class Controller
+ */
 abstract class Controller
 {
     public function __construct()
