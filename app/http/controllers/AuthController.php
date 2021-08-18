@@ -35,7 +35,7 @@ class AuthController extends Controller
         $data = [];
 
         if (isset($_POST['login'])) {
-            $data = $this->validate($errors);
+            $errors = $this->validate($errors);
         }
 
         if (empty($errors))

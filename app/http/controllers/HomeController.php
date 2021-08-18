@@ -24,7 +24,7 @@ class HomeController extends Controller
         $total = $taskModel->getTotalRows();
 
         // Параметры для фильтрации
-        $paramsForOrdering = $this->getValidQueryParamsForOrderBy();
+        $paramsForOrdering = $this->getParamsForOrdering();
 
         // Номер запрашиваемой страницы из панинацмм
         $page = $this->getCurrentPage($taskModel->perPage, $total);
@@ -71,12 +71,14 @@ class HomeController extends Controller
      *  моделей
      * @return array $data['column', 'inOrder'];
      */
-    protected function getValidQueryParamsForOrderBy()
+    protected function getParamsForOrdering()
     {
+
+        $availableColumns = ['username', 'user_email','status'];
         $column = 'id';
         $inOrder = 'DESC';
 
-        if (isset($_GET['column']) && ($_GET['column'] === 'username'|| $_GET['column'] === 'user_email' || $_GET['column'] === 'status'))
+        if (isset($_GET['column']) && in_array(strtolower($_GET['column']), $availableColumns))
         {
             $column = $_GET['column'];
         }
